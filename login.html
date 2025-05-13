@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Budget Tracker</title>
+</head>
+<body>
+  <h1>Login to Your Budget Tracker</h1>
+  
+  <form id="login-form">
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" id="email" required placeholder="Enter your email">
+    </div>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" id="password" required placeholder="Enter your password">
+    </div>
+    <button type="submit">Login</button>
+  </form>
+
+  <p id="error-message" style="color:red; display:none;">Invalid credentials, please try again.</p>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+
+  <script>
+// Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyC1DOQF-58tc2FkLk4LJ8sW7wabb4mOq94",
+    authDomain: "budget-tracker-bf734.firebaseapp.com",
+    projectId: "budget-tracker-bf734",
+    storageBucket: "budget-tracker-bf734.firebasestorage.app",
+    messagingSenderId: "252573094881",
+    appId: "1:252573094881:web:ad39c79c7c6a1571c3b8a0"
+  };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Login function
+    document.getElementById("login-form").addEventListener("submit", function(event) {
+      event.preventDefault();
+      
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          // Successfully logged in
+          window.location.href = "index.html"; // Redirect to the home page
+        })
+        .catch((error) => {
+          const errorMessage = document.getElementById("error-message");
+          errorMessage.style.display = "block";
+        });
+    });
+  </script>
+</body>
+</html>
