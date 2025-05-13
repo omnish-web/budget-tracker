@@ -41,7 +41,7 @@ document.getElementById("expense-form").addEventListener("submit", (e) => {
 
   const userEmail = user.email;
 
-  const scriptURL = "https://script.google.com/macros/s/AKfycbz_Of7I9jBqZHnoQ9fdD42SWKp_rZ_h-2Obg9CyN5UpCHK4dwxmp7DleL105wJV2Lfw/exec";
+  const scriptURL = "https://script.google.com/macros/library/d/1zy7sFCvyR26vlnfiJZZkPTwSDoZ7-ELop8exw5mfODff0UYVHnB9aBpE/2";
 
   fetch(scriptURL, {
     method: "POST",
