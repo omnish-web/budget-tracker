@@ -26,7 +26,7 @@ document.getElementById("expense-form").addEventListener("submit", async functio
   };
 
   try {
-    const response = await fetch("https://script.google.com/macros/s/AKfycbz_Of7I9jBqZHnoQ9fdD42SWKp_rZ_h-2Obg9CyN5UpCHK4dwxmp7DleL105wJV2Lfw/exec", {
+    const response = await fetch("https://script.google.com/macros/library/d/1zy7sFCvyR26vlnfiJZZkPTwSDoZ7-ELop8exw5mfODff0UYVHnB9aBpE/1", {
       method: "POST",
       body: JSON.stringify(payload),
       headers: {
