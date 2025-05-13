@@ -6,17 +6,22 @@
   <style>
     body { font-family: Arial, sans-serif; padding: 40px; }
     form { max-width: 400px; margin: auto; }
-    input, button { width: 100%; padding: 10px; margin: 10px 0; }
+    input, button, textarea, select { width: 100%; padding: 10px; margin: 10px 0; }
     #logout { margin-top: 20px; background: #f44336; color: white; border: none; }
   </style>
 </head>
 <body>
   <h2>Enter Your Budget Details</h2>
   <p id="welcome"></p>
-  
+
   <form id="budget-form">
     <input type="text" id="category" placeholder="Category (e.g. Food)" required />
+    <textarea id="description" placeholder="Description (e.g. Lunch at Cafe)" rows="3" required></textarea>
     <input type="number" id="amount" placeholder="Amount" required />
+    
+    <label><input type="radio" name="type" value="Expense" checked /> Expense</label>
+    <label><input type="radio" name="type" value="Income" /> Income</label>
+
     <button type="submit">Submit</button>
   </form>
 
@@ -27,38 +32,72 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
   <script>
-    // Firebase configuration (same as login.html)
-// Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyC1DOQF-58tc2FkLk4LJ8sW7wabb4mOq94",
-    authDomain: "budget-tracker-bf734.firebaseapp.com",
-    projectId: "budget-tracker-bf734",
-    storageBucket: "budget-tracker-bf734.firebasestorage.app",
-    messagingSenderId: "252573094881",
-    appId: "1:252573094881:web:ad39c79c7c6a1571c3b8a0"
-  };
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyC1DOQF-58tc2FkLk4LJ8sW7wabb4mOq94",
+      authDomain: "budget-tracker-bf734.firebaseapp.com",
+      projectId: "budget-tracker-bf734",
+      storageBucket: "budget-tracker-bf734.firebasestorage.app",
+      messagingSenderId: "252573094881",
+      appId: "1:252573094881:web:ad39c79c7c6a1571c3b8a0"
+    };
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // Wait for auth state to load
+    // Check auth state
     auth.onAuthStateChanged(user => {
       if (user) {
         document.getElementById('welcome').textContent = `Welcome, ${user.email}`;
       } else {
-        window.location.href = "login.html"; // Redirect if not logged in
+        window.location.href = "login.html";
       }
     });
 
-    // Handle form submission (you’ll add Google Sheets logic here in Phase IV)
+    // Form submission
     document.getElementById('budget-form').addEventListener('submit', e => {
       e.preventDefault();
+
       const category = document.getElementById('category').value;
-      const amount = document.getElementById('amount').value;
-      alert(`Category: ${category}, Amount: ₹${amount} (submission logic coming soon)`);
+      const description = document.getElementById('description').value;
+      const amount = parseFloat(document.getElementById('amount').value);
+      const type = document.querySelector('input[name="type"]:checked').value;
+
+      const user = auth.currentUser;
+      if (!user) {
+        alert("User not authenticated.");
+        return;
+      }
+
+      fetch("https://script.google.com/macros/s/AKfycbz_Of7I9jBqZHnoQ9fdD42SWKp_rZ_h-2Obg9CyN5UpCHK4dwxmp7DleL105wJV2Lfw/exec", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          category: category,
+          description: description,
+          amount: amount,
+          type: type,
+          userID: user.email
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          alert("Entry submitted successfully!");
+          document.getElementById('budget-form').reset();
+        } else {
+          alert("Something went wrong. Please try again.");
+        }
+      })
+      .catch(error => {
+        console.error("Submission error:", error);
+        alert("Submission failed. Check console for error.");
+      });
     });
 
-    // Logout button
+    // Logout
     document.getElementById('logout').addEventListener('click', () => {
       auth.signOut().then(() => {
         window.location.href = "login.html";
