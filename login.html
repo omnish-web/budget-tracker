@@ -26,21 +26,18 @@
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
 
   <script>
-// Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyC1DOQF-58tc2FkLk4LJ8sW7wabb4mOq94",
-    authDomain: "budget-tracker-bf734.firebaseapp.com",
-    projectId: "budget-tracker-bf734",
-    storageBucket: "budget-tracker-bf734.firebasestorage.app",
-    messagingSenderId: "252573094881",
-    appId: "1:252573094881:web:ad39c79c7c6a1571c3b8a0"
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyC1DOQF-58tc2FkLk4LJ8sW7wabb4mOq94",
+      authDomain: "budget-tracker-bf734.firebaseapp.com",
+      projectId: "budget-tracker-bf734",
+      storageBucket: "budget-tracker-bf734.firebasestorage.app",
+      messagingSenderId: "252573094881",
+      appId: "1:252573094881:web:ad39c79c7c6a1571c3b8a0"
+    };
 
-    // Initialize Firebase
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // Login function
     document.getElementById("login-form").addEventListener("submit", function(event) {
       event.preventDefault();
       
@@ -49,7 +46,6 @@
 
       auth.signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
-          // Successfully logged in
           window.location.href = "index.html"; // Redirect to the home page
         })
         .catch((error) => {
