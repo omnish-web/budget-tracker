@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Budget Tracker</title>
+</head>
+<body>
+  <h1>Budget Tracker</h1>
+
+  <div id="login-section">
+    <h2>Login</h2>
+    <input type="email" id="email" placeholder="Email"><br>
+    <input type="password" id="password" placeholder="Password"><br>
+    <button onclick="login()">Login</button>
+  </div>
+
+  <div id="form-section" style="display: none;">
+    <h2>Submit Budget</h2>
+    <input type="text" id="category" placeholder="Category"><br>
+    <input type="number" id="amount" placeholder="Amount"><br>
+    <button onclick="submitBudget()">Submit</button>
+  </div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
