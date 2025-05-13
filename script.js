@@ -1,36 +1,49 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
+document.getElementById("expense-form").addEventListener("submit", async function (e) {
+  e.preventDefault();
 
-// 🔐 Your Firebase Config
-// Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyC1DOQF-58tc2FkLk4LJ8sW7wabb4mOq94",
-    authDomain: "budget-tracker-bf734.firebaseapp.com",
-    projectId: "budget-tracker-bf734",
-    storageBucket: "budget-tracker-bf734.firebasestorage.app",
-    messagingSenderId: "252573094881",
-    appId: "1:252573094881:web:ad39c79c7c6a1571c3b8a0"
+  const email = sessionStorage.getItem("userEmail");
+  if (!email) {
+    alert("User not logged in. Please log in first.");
+    return;
+  }
+
+  const category = document.getElementById("category").value;
+  const description = document.getElementById("description").value;
+  const amount = parseFloat(document.getElementById("amount").value);
+  const type = document.getElementById("type").value;
+
+  if (!category || !description || isNaN(amount) || !type) {
+    alert("Please fill all fields.");
+    return;
+  }
+
+  const payload = {
+    category,
+    description,
+    amount,
+    type,
+    email
   };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-window.login = function () {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      alert("Login successful!");
-    })
-    .catch((error) => {
-      alert("Login failed: " + error.message);
+  try {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbz_Of7I9jBqZHnoQ9fdD42SWKp_rZ_h-2Obg9CyN5UpCHK4dwxmp7DleL105wJV2Lfw/exec", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json"
+      }
     });
-};
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    document.getElementById("login-section").style.display = "none";
-    document.getElementById("form-section").style.display = "block";
+    const result = await response.json();
+    if (result.result === "success") {
+      alert("Entry added!");
+      document.getElementById("expense-form").reset();
+    } else {
+      alert("Something went wrong.");
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Error sending data.");
   }
 });
+
